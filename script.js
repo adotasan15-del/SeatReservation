@@ -10,7 +10,7 @@ const seats = [
 
     {num:1,x:26,y:120},
     {num:2,x:26,y:191},
-    {num:3,x:26,y:263}, 
+    {num:3,x:26,y:263},
     {num:4,x:26,y:332},
     {num:5,x:26,y:403},
     {num:6,x:26,y:473},
@@ -63,19 +63,24 @@ const seats = [
 const layer = document.getElementById("seatLayer");
 
 
+
 // 좌석 생성
 
 seats.forEach(seat => {
 
+
     let btn = document.createElement("button");
 
+
     btn.className = "seat";
+
 
     btn.dataset.seat = seat.num;
 
 
     btn.style.left = seat.x + "px";
     btn.style.top = seat.y + "px";
+
 
 
     btn.onclick = function(){
@@ -86,10 +91,12 @@ seats.forEach(seat => {
         }
 
 
+
         document.querySelectorAll(".seat")
         .forEach(s=>{
             s.classList.remove("selected");
         });
+
 
 
         btn.classList.add("selected");
@@ -103,44 +110,78 @@ seats.forEach(seat => {
             selectedSeat
         );
 
+
     };
+
 
 
     layer.appendChild(btn);
 
+
 });
 
+
+
+// 페이지 접속 시 예약 좌석 확인
+
+loadReservedSeats();
+
+
+
 // 예약 좌석 불러오기
+
 function loadReservedSeats(){
+
 
     fetch(WEB_APP_URL)
 
+
     .then(response => response.json())
+
 
     .then(data => {
 
-        data.forEach(seatNum => {
 
-            let btn = document.querySelector(
+        console.log(
+            "예약 좌석:",
+            data
+        );
+
+
+        data.forEach(seatNum=>{
+
+
+            let btn =
+            document.querySelector(
                 `[data-seat="${seatNum}"]`
             );
 
+
             if(btn){
+
                 btn.classList.add("reserved");
+
             }
+
 
         });
 
+
     })
 
+
     .catch(error=>{
+
         console.error(
             "예약 불러오기 오류:",
             error
         );
+
     });
 
+
 }
+
 
 
 
@@ -154,7 +195,7 @@ function reserve(){
 
 
 
-    if(name.trim() === ""){
+    if(name.trim()===""){
 
         alert("이름을 입력해주세요.");
 
@@ -164,7 +205,7 @@ function reserve(){
 
 
 
-    if(selectedSeat === null){
+    if(selectedSeat===null){
 
         alert("좌석을 선택해주세요.");
 
@@ -193,6 +234,7 @@ function reserve(){
 
 
 
+
     // Google Sheet 저장
 
     fetch(WEB_APP_URL, {
@@ -208,16 +250,20 @@ function reserve(){
         })
 
     })
-    .then(response => response.text())
-    .then(result => {
+
+    .then(response=>response.text())
+
+    .then(result=>{
 
         console.log(
-            "시트 저장 결과:",
+            "저장 결과:",
             result
         );
 
     })
-    .catch(error => {
+
+
+    .catch(error=>{
 
         console.error(
             "저장 오류:",
@@ -228,10 +274,9 @@ function reserve(){
 
 
 
-    // 초기화
-
     selectedSeat = null;
 
-    document.getElementById("name").value = "";
+    document.getElementById("name").value="";
+
 
 }
