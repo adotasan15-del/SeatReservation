@@ -110,7 +110,37 @@ seats.forEach(seat => {
 
 });
 
+// 예약 좌석 불러오기
+function loadReservedSeats(){
 
+    fetch(WEB_APP_URL)
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        data.forEach(seatNum => {
+
+            let btn = document.querySelector(
+                `[data-seat="${seatNum}"]`
+            );
+
+            if(btn){
+                btn.classList.add("reserved");
+            }
+
+        });
+
+    })
+
+    .catch(error=>{
+        console.error(
+            "예약 불러오기 오류:",
+            error
+        );
+    });
+
+}
 
 
 
