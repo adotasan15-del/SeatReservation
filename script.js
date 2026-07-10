@@ -60,6 +60,7 @@ const seats = [
 ];
 
 
+
 const layer = document.getElementById("seatLayer");
 
 
@@ -87,14 +88,20 @@ seats.forEach(seat => {
 
 
         if(btn.classList.contains("reserved")){
+
+            alert("이미 예약된 좌석입니다.");
+
             return;
+
         }
 
 
 
         document.querySelectorAll(".seat")
         .forEach(s=>{
+
             s.classList.remove("selected");
+
         });
 
 
@@ -114,7 +121,6 @@ seats.forEach(seat => {
     };
 
 
-
     layer.appendChild(btn);
 
 
@@ -122,12 +128,6 @@ seats.forEach(seat => {
 
 
 
-// 페이지 접속 시 예약 좌석 확인
-
-loadReservedSeats();
-
-// 1초마다 예약 상태 확인
-setInterval(loadReservedSeats, 1000);
 
 // 예약 좌석 불러오기
 
@@ -137,17 +137,30 @@ function loadReservedSeats(){
     fetch(WEB_APP_URL)
 
 
-    .then(response => response.json())
+    .then(response=>response.json())
 
 
-    .then(data => {
+    .then(data=>{
 
 
         console.log(
-            "예약 좌석:",
+            "현재 예약 좌석:",
             data
         );
 
+
+        // 기존 예약 표시 제거
+
+        document.querySelectorAll(".seat")
+        .forEach(btn=>{
+
+            btn.classList.remove("reserved");
+
+        });
+
+
+
+        // 예약 좌석 표시
 
         data.forEach(seatNum=>{
 
@@ -185,6 +198,23 @@ function loadReservedSeats(){
 
 
 
+// 처음 접속 시 실행
+
+loadReservedSeats();
+
+
+
+// 1초마다 자동 업데이트
+
+setInterval(()=>{
+
+    loadReservedSeats();
+
+},1000);
+
+
+
+
 
 // 예약 버튼
 
@@ -216,31 +246,11 @@ function reserve(){
 
 
 
-    let btn =
-    document.querySelector(
-        `[data-seat="${selectedSeat}"]`
-    );
-
-
-
-    btn.classList.remove("selected");
-
-    btn.classList.add("reserved");
-
-
-
-    document.getElementById("result")
-    .innerHTML =
-    `${name}님 ${selectedSeat}번 좌석 예약 완료`;
-
-
-
-
-    // Google Sheet 저장
-
     fetch(WEB_APP_URL, {
 
+
         method:"POST",
+
 
         body:JSON.stringify({
 
@@ -250,60 +260,83 @@ function reserve(){
 
         })
 
+
     })
 
+
     .then(response=>response.text())
+
 
     .then(result=>{
 
 
-    if(result === "duplicate_name"){
-
-        alert(
-            "이미 예약한 이름입니다."
+        console.log(
+            "예약 결과:",
+            result
         );
 
-        location.reload();
-
-        return;
-
-    }
 
 
-    if(result === "duplicate_seat"){
-
-        alert(
-            "이미 예약된 좌석입니다."
-        );
-
-        location.reload();
-
-        return;
-
-    }
+        if(result==="duplicate_name"){
 
 
-    console.log(
-        "저장 결과:",
-        result
-    );
+            alert(
+                "이미 예약한 이름입니다."
+            );
 
 
-})
+            return;
+
+        }
+
+
+
+        if(result==="duplicate_seat"){
+
+
+            alert(
+                "이미 예약된 좌석입니다."
+            );
+
+
+            return;
+
+        }
+
+
+
+        if(result==="success"){
+
+
+            alert(
+                `${name}님 ${selectedSeat}번 좌석 예약 완료`
+            );
+
+
+            loadReservedSeats();
+
+
+        }
+
+
+    })
 
 
     .catch(error=>{
+
 
         console.error(
             "저장 오류:",
             error
         );
 
+
     });
 
 
 
-    selectedSeat = null;
+    selectedSeat=null;
+
 
     document.getElementById("name").value="";
 
