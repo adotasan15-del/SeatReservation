@@ -1,5 +1,5 @@
 const WEB_APP_URL =
-"https://script.google.com/macros/s/AKfycby0oWfLcUiE53QBwBkM-QFEconnHKs1l7yB_rTYUspXoPxUoqvaFriOwmkpBMnxXNul6w/exec";
+"https://script.google.com/macros/s/AKfycbwFPTH7PMmPC1MqjwpaZnUWYudjOnkCvKF4J89ptJvD0UUzRJmUqOL4mgyCerRdYd8mzQ/exec";
 
 
 let selectedSeat = null;
@@ -126,7 +126,8 @@ seats.forEach(seat => {
 
 loadReservedSeats();
 
-
+// 1초마다 예약 상태 확인
+setInterval(loadReservedSeats, 1000);
 
 // 예약 좌석 불러오기
 
@@ -255,12 +256,40 @@ function reserve(){
 
     .then(result=>{
 
-        console.log(
-            "저장 결과:",
-            result
+
+    if(result === "duplicate_name"){
+
+        alert(
+            "이미 예약한 이름입니다."
         );
 
-    })
+        location.reload();
+
+        return;
+
+    }
+
+
+    if(result === "duplicate_seat"){
+
+        alert(
+            "이미 예약된 좌석입니다."
+        );
+
+        location.reload();
+
+        return;
+
+    }
+
+
+    console.log(
+        "저장 결과:",
+        result
+    );
+
+
+})
 
 
     .catch(error=>{
