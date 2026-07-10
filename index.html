@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>좌석 예약 시스템</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>좌석 예약 시스템</h1>
+
+<div class="seat-container">
+
+    <img src="seatmap.png" class="seat-map">
+
+    <div id="seatLayer"></div>
+
+</div>
+
+
+<div class="reserve-box">
+
+    <input 
+    type="text" 
+    id="name" 
+    placeholder="이름 입력">
+
+
+    <button onclick="reserve()">
+        좌석 예약
+    </button>
+
+</div>
+
+
+<p id="result"></p>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
