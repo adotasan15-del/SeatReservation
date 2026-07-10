@@ -91,12 +91,10 @@ seats.forEach(seat => {
         }
 
 
-
         document.querySelectorAll(".seat")
         .forEach(s=>{
             s.classList.remove("selected");
         });
-
 
 
         btn.classList.add("selected");
@@ -114,11 +112,21 @@ seats.forEach(seat => {
     };
 
 
-
     layer.appendChild(btn);
 
 
 });
+
+// 처음 접속했을 때 예약좌석 표시
+loadReservedSeats();
+
+
+// 1초마다 예약상태 확인
+setInterval(() => {
+
+    loadReservedSeats();
+
+}, 1000);
 
 
 
